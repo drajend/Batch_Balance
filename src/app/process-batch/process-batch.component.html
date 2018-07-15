@@ -1,0 +1,335 @@
+
+<div id="wrapper" style="padding-top: 8px;" >
+  <!-- Navigation -->
+  <div id="page-wrapper">
+      <!-- /.row -->
+      <!-- <div class="row">
+          <div class="col-ls-12">
+              <br>
+          </div>
+      </div> -->
+      <!-- /.row -->
+      <div class="split-example" style="height: 100%;">
+        <split [direction]="d.dir" 
+            [gutterSize]="d.gutterSize" 
+            [width]="d.width" 
+            [height]="d.height" 
+            useTransition="true">
+            <split-area [size]="d.size1" >
+                <split direction="vertical">
+                    <split-area>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-bar-chart-o fa-fw"></i>Process Batch<div class="pull-right">
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-default btn-xs dropdown-toggle" (click)="hideProBatchView()" type="button" data-toggle="dropdown">
+                                                    Hide Process Batch View
+                                                    <!-- <span class="caret"></span> -->
+                                                </button>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="row">           
+                                    <div class="col-lg-4">
+                                        <!-- /.table-responsive -->
+                                      <form role="form">
+                                            <div class="form-group" style="margin-bottom: 0px;">
+                                                <label>Lockbox</label>
+                                                <input class="form-control" ngControl="Lockbox" [(ngModel)]="lbxid" name="lbxid" readonly>
+                                            </div>
+                                            <div class="form-group" style="margin-bottom: 0px;">
+                                                <label>Lockbox Date</label>
+                                                <input class="form-control" ngControl="LockboxDate" [(ngModel)]="lbxdate" name="lbxdate" readonly>
+                                            </div><div class="form-group"style="margin-bottom: 0px;">
+                                                <label>Batch</label>
+                                                <input class="form-control" ngControl="Batch"  [(ngModel)]="lbxbatch" name="lbxbatch" readonly>
+                                            </div><div class="form-group"style="margin-bottom: 0px;">
+                                                <label>Items in Batch</label>
+                                                <input class="form-control"  ngControl="Items"  [(ngModel)]="itemsbatch" name="itemsbatch" readonly>   
+                                            </div><div class="form-group"style="margin-bottom: 0px;">
+                                                <label>Completed</label>
+                                                <input class="form-control" ngControl="Completed" [(ngModel)]="batchCompleted" value="{{batchCompleted | currency:'USD':true: '1.2-2'}}" name="batchCompleted" readonly>
+                                            </div><div class="form-group"style="margin-bottom: 0px;">
+                                                <label>Batch Total</label>
+                                                <input class="form-control" ngControl="BatchTotal"  [(ngModel)]="totalbatchAmount" value="{{totalbatchAmount | currency:'USD':true: '1.2-2'}}" name="totalbatchAmount" readonly>
+                                            </div>
+                                     </form>
+                                      <p>
+                                          <button class="btn btn-info" [disabled]="disableButton()" (click)="doneProcessBatch()" type="button">Done</button>
+                                          <!-- <button class="btn btn-warning" type="button">Open</button>-->
+                                          <button class="btn btn-success" [disabled]="disableButton()" (click)="closeWindow()" type="button">Close</button>
+                                      </p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                          <div class="table-responsive" *ngIf="getProcBatchData!==null" style="height: 448px;">
+                                              <data-table 
+                                                  [headerTitle]="headerTitleProcBatch"
+                                                  [items]="getProcBatchData"
+                                                  [itemCount]="pbbCount"
+                                                  (reload)="reloadProcBatchData($event)"
+                                                  
+                                                  [indexColumn]="false"
+                                                  [pagination]="false"
+                                                  [selectColumn]="false"
+                                                  [multiSelect]="false"
+                                                  [rowColors]="rowColors">
+                                                  <data-table-column
+                                                      header="Action"
+                                                      width="15%">
+                                                      <ng-template #dataTableCell let-item="item">
+                                                          <button [disabled]="disableButton()" (click)="openCheck(item)" class="btn btn-sm btn-default">...</button>
+                                                      </ng-template>
+                                                  </data-table-column>
+                                                  <data-table-column
+                                                      property="BatchItemNumber"
+                                                      header="Item"
+                                                      width="13%">                                                              
+                                                  </data-table-column>
+                                                  <data-table-column
+                                                      property="Amount"
+                                                      header="Amount"
+                                                      width="35%"
+                                                      style="text-align: right">
+                                                      <ng-template #dataTableCell let-item="item">
+                                                          <span >{{item.Amount | currency:'USD':true: '1.2-2'}}</span>
+                                                      </ng-template>
+                                                  </data-table-column>
+                                                  <data-table-column
+                                                      property="Modified"
+                                                      header="Modified">
+                                                      <ng-template #dataTableCell let-item="item">
+                                                              {{item.Amount==item.PLPTotal?'Yes':'No'}}
+                                                      </ng-template>
+                                                  </data-table-column>
+                                                  <!-- <data-table-column
+                                                      property="Error"
+                                                      header="Error">
+                                                      <ng-template #dataTableCell let-item="item">
+                                                              {{item.Error=='true'?'Yes':'No'}}
+                                                      </ng-template>
+                                                  </data-table-column> -->
+                                              </data-table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-hide="AWDObjId"></div>
+                              </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </split-area>
+                </split>
+            </split-area>
+            <split-area [size]="d.size2">
+                <split direction="vertical" >
+                    <split-area>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <i class="fa fa-sticky-note"></i> Document Viewer
+                                    <div class="pull-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-default btn-xs dropdown-toggle" (click)="showProBatchView()" type="button" data-toggle="dropdown">
+                                                Show Process Batch View
+                                                <!-- <span class="caret"></span> -->
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body" *ngIf="imageViewer!==''" style="height: 478px;">
+                                      <iframe [src]="imageViewer | safe" frameborder="0" scrolling="no" style="width: 100%; height: 100%; position: relative;"></iframe>                        
+                                  </div>
+                            </div>
+                    </split-area>
+                    <split-area>
+                        <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-bar-chart-o fa-fw"></i>Check View
+                                        <div class="pull-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-default btn-xs dropdown-toggle" (click)="showProBatchView()" type="button" data-toggle="dropdown">
+                                                    Show Process Batch View
+                                                    <!-- <span class="caret"></span> -->
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.panel-heading -->
+                                    <!-- /.panel-body -->
+                                        <div class="panel-body" [hidden]="enabdisCheckView()">
+                                            <div class="row">
+                                                <form class="form-inline">
+                                                    <div class="form-group" style="padding-left: 15px;">
+                                                      <label for="email">Lockbox:</label>
+                                                      <input class="form-control" id="LockboxCV" [(ngModel)]="LockboxCV" name="LockboxCV"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="pwd">Lockbox Date:</label>
+                                                      <input class="form-control" id="LockboxDateCV" [(ngModel)]="LockboxDateCV" name="LockboxDateCV"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="pwd">Batch:</label>
+                                                      <input class="form-control" id="BatchCV" [(ngModel)]="BatchCV" name="BatchCV" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="pwd">Item:</label>
+                                                      <input class="form-control" id="ItemCV" [(ngModel)]="ItemCV" name="ItemCV"  readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <button class="btn btn-info" id="search" (click)="Referral()">Referral</button>
+                                                    </div>
+                                                  </form> 
+                                            </div>                            
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">
+                                                        <label for="usr">Last Name</label>
+                                                        <input class="form-control" id="lastnameSearch" (keyup.enter)="getLoanData()"  (keypress)="omit_special_char($event)"  type="text" [(ngModel)]="lastnameSearch" name="lastnameSearch" >
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">
+                                                        <label for="usr">First Name</label>
+                                                        <input class="form-control" id="firstnameSearch" (keyup.enter)="getLoanData()" (keypress)="omit_special_char($event)"  type="text" [(ngModel)]="firstnameSearch" name="firstnameSearch">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">
+                                                        <label for="usr">SSN</label>
+                                                        <input class="form-control" maxlength="9" id="ssnSearch" (keyup.enter)="getLoanData()"  (keypress)="onlyNumberKey($event)" type="text" name="ssnSearch" [(ngModel)]="ssnSearch">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">
+                                                        <label for="usr">Account</label>
+                                                        <input class="form-control" maxlength="7" id="accountSearch" (keyup.enter)="getLoanData()" (keypress)="onlyNumberKey($event)" name="accountSearch" type="text" [(ngModel)]="accountSearch">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <div class="form-group">
+                                                    <label for="usr">Loan</label>
+                                                    <input class="form-control" id="loanSearch" (keypress)="onlyDecimalNumberKey($event)" type="text" name="loanSearch" [(ngModel)]="loanSearch">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <label style="color: white;" for="usr">Search</label>
+                                                    <p>
+                                                        <button class="btn btn-info" id="search" (click)="getLoanData()">Search</button>
+                                                        <button class="btn btn-success" id="clearSearch" (click)="clearSearch()" type="button">Clear Search</button>
+                                                      </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="table-responsive" *ngIf="setProccessCheck!==null" syte="height: 180px;" >
+                                                      <data-table
+                                                          [headerTitle]="headerCheckView"
+                                                          [items]="setProccessCheck"
+                                                          [itemCount]="cvCount"
+                  
+                                                          (rowClick)="rowClick($event)"
+                                                          [indexColumn]="false"
+                                                          [pagination]="false"
+                                                          [selectColumn]="false"
+                                                          [multiSelect]="false"  
+                                                          [rowTooltip]="rowTooltip" >
+                                                          <data-table-column
+                                                              property="Name"
+                                                              header="Name">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="SSN"
+                                                              header="SSN">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="Account"
+                                                              header="Account">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="AcStat"
+                                                              header="AcStat">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="Loan"
+                                                              header="Loan">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="SingleMultiLoan"
+                                                              header="M/S">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="LoanStat"
+                                                              header="LoanStat">
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="PayoffAmt"
+                                                              header="PayoffAmt">
+                                                              <ng-template #dataTableCell let-item="item">
+                                                                      {{item.PayoffAmt | currency:'USD':true: '1.2-2'}}
+                                                              </ng-template>
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="NextPayAmt"
+                                                              header="NextPayAmt">
+                                                              <ng-template  #dataTableCell let-item="item">
+                                                                      {{item.NextPayAmt | currency:'USD':true: '1.2-2'}}
+                                                              </ng-template>
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="LastPayAmt"
+                                                              header="LastPayAmt">
+                                                              <ng-template #dataTableCell let-item="item">
+                                                                      {{item.LastPayAmt | currency:'USD':true: '1.2-2'}}
+                                                              </ng-template>
+                                                          </data-table-column>
+                                                          <data-table-column
+                                                              property="AmountPaid"
+                                                              header="Amount">
+                                                              <ng-template  #dataTableCell let-item="item">
+                                                                  <input type="AmountPaid" [(ngModel)]="item.AmountPaid" 
+                                                                      (keyup.enter)="updateCheckItem($event, item)"
+                                                                      (keypress)="onlyDecimalNumberKey($event)"
+                                                                      class="form-control input-sm" style="width: 75px"/>
+                                                              </ng-template>
+                                                          </data-table-column>
+                                                      </data-table>
+                                                </div>
+                                            </div>
+                                            <div class="row">   
+                                            </div>             
+                                            <div class="col-sm-3">
+                                                <p>
+                                                    <button class="btn btn-info" id="Done" (click)="doneCheckView()" type="button">Done</button>
+                                                    <button class="btn btn-success" id="Next" (click)="nextBatch()"  type="button">Next</button>
+                                                    <button class="btn btn-warning" id="Cancel" (click)="cancelCheckView()"  type="button">Cancel</button>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <form class="form-inline">
+                                                    <div class="form-group">
+                                                      <label for="pwd">Total Amount</label>
+                                                      <input class="form-control" id="TotalAmount" name="TotalAmount"  [(ngModel)]="TotalAmount"  name="totalAmount" type="text" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="pwd">Check Total:</label>
+                                                      <input class="form-control" id="totalCheckAmount" name="totalCheckAmount"  [(ngModel)]="totalCheckAmount"  type="text" readonly>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <label for="pwd">Difference:</label>
+                                                      <input class="form-control" id="Difference" [(ngModel)]="Difference"  name="Difference" type="text" readonly>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                            </div>
+                    </split-area>
+                </split>
+                
+            </split-area>
+        </split>
+      </div>
+ 
+  </div>
+</div>

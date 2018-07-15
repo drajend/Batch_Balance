@@ -1,0 +1,36 @@
+.upper {
+  height: 100%;
+  width: 100%;
+  background-color: #fdd;
+}
+
+.lower {
+  height: 100%;
+  width: 100%;
+  background-color: #bbb;
+}
+
+.left {
+  height: 100%;
+  background-color: #ddf;
+}
+
+.right {
+  height: 100%;
+  background-color: #dfd;
+}
+
+host {
+  display: block;
+  width: 100%;
+  margin: 50px 0;
+}
+
+custHightFont{
+  height: 30px; 
+  font-size: 12px;
+}
+
+:host ::ng-deep .data-table {
+  font-size: 12px;
+}
